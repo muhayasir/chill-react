@@ -1,0 +1,30 @@
+.btn-main,
+.btn-google {
+  width: 100%;
+  padding: 8px 12px;
+  background: transparent;
+  color: #ffffff;
+  border: 0.58px solid #e7e3fc3b;
+  border-radius: 14px;
+  gap: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 140%;
+  letter-spacing: 0.02px;
+}
+
+.btn-main:hover,
+.btn-google:hover {
+  background: #3d4142;
+}
+
+.btn-google img {
+  width: 12px;
+  height: 12px;
+  margin-right: 6px;
+}

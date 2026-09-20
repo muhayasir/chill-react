@@ -1,0 +1,178 @@
+.navbar {
+  width: 100%;
+  height: 94px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 80px;
+  background: #181a1c;
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+}
+
+.nav-left {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 80px;
+}
+
+.nav-left img {
+  display: block;
+  width: 104px;
+  object-fit: cover;
+}
+
+.navigation {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.navigation ul {
+  display: flex;
+  list-style: none;
+  gap: 80px;
+}
+
+.navigation ul li {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.navigation a {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 140%;
+  letter-spacing: 0.2px;
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.navigation a:hover {
+  color: #3254ff;
+}
+
+.nav-right {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.avatar-profil svg {
+  width: 40px;
+  height: 40px;
+  color: #ffffff;
+}
+
+.dropdown-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-toggle svg {
+  width: 14px;
+  height: 14px;
+  color: #ffffff;
+}
+
+.dropdown {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 130%;
+  right: 0;
+  background: #181a1c;
+  border-radius: 4px;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 180px;
+  box-shadow: 0 8px 24px #3e434a4f, #3e434a26;
+
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: all 0.2s ease;
+}
+
+.dropdown:hover .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-menu a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 140%;
+  letter-spacing: 0.2px;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-menu a svg {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+}
+
+.dropdown-menu a:hover {
+  color: #3254ff;
+}
+
+@media (max-width: 1024px) {
+  .navbar {
+    padding: 0 40px;
+  }
+
+  .nav-left {
+    gap: 40px;
+  }
+
+  .navigation ul {
+    gap: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    height: 64px;
+    padding: 0 16px;
+  }
+
+  .nav-left {
+    gap: 20px;
+  }
+
+  .nav-left img {
+    width: 72px;
+  }
+
+  .navigation ul {
+    gap: 16px;
+  }
+
+  .navigation a {
+    font-size: 13px;
+  }
+
+  .avatar-profil svg {
+    width: 32px;
+    height: 32px;
+  }
+}

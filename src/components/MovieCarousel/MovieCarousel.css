@@ -1,0 +1,92 @@
+.movie-carousel {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 40px 80px;
+}
+
+.section-title {
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.card-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+}
+
+.card-container::-webkit-scrollbar {
+  display: none;
+}
+
+.movie-list {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  list-style: none;
+  justify-content: flex-start;
+  width: 100%;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.four-column {
+  gap: 24px;
+}
+
+.five-column {
+  gap: 28px;
+}
+
+.four-column > li {
+  flex: 0 0 calc(25% - 18px);
+  min-width: calc(25% - 18px);
+}
+
+.five-column > li {
+  flex: 0 0 calc(20% - 22.4px);
+  min-width: calc(20% - 22.4px);
+}
+
+@media (max-width: 768px) {
+  .movie-carousel {
+    padding: 24px 16px;
+    gap: 16px;
+  }
+
+  .section-title {
+    font-size: 18px;
+  }
+
+  .card-container {
+    overflow-x: visible;
+  }
+
+  .movie-list.four-column {
+    display: flex;
+    overflow-x: auto;
+    gap: 12px;
+  }
+
+  .four-column > li {
+    flex: 0 0 85%;
+    min-width: 85%;
+  }
+
+  .movie-list.five-column {
+    display: flex;
+    overflow-x: auto;
+    gap: 12px;
+    scroll-snap-type: x mandatory;
+  }
+
+  .five-column > li {
+    flex: 0 0 calc((100% - 24px) / 3);
+    min-width: calc((100% - 24px) / 3);
+    scroll-snap-align: start;
+  }
+}

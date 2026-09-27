@@ -5,6 +5,7 @@ import PublicOnlyRoute from './routes/PublicOnlyRoute.jsx';
 import Home from './pages/Home/Home.jsx';
 import Login from './pages/Login/Login.jsx';
 import Register from './pages/Register/Register.jsx';
+import Profile from './pages/Profile/Profile.jsx';
 
 export default function App() {
   return (
@@ -36,6 +37,14 @@ export default function App() {
               <PublicOnlyRoute>
                 <Register />
               </PublicOnlyRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+               <Profile />
+              </ProtectedRoute>
             }
           />
         </Routes>

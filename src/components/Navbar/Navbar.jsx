@@ -21,13 +21,16 @@ export default function Navbar() {
   const { logout } = useAuth();
   const navigate = useNavigate();
 
+
   const handleMenuClick = (label) => (e) => {
-    e.preventDefault();
-    if (label === 'Keluar') {
-      logout();
-      navigate('/login', { replace: true });
-    }
-  };
+  e.preventDefault();
+  if (label === 'Keluar') {
+    logout();
+    navigate('/login', { replace: true });
+  } else if (label === 'Profil Saya') {
+    navigate('/profile');
+  }
+};
 
   return (
     <header className="navbar">

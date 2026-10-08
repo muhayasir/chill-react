@@ -1,14 +1,12 @@
-import { IoPlay, IoCheckmarkOutline, IoChevronDownOutline } from 'react-icons/io5';
+import {
+  IoPlay,
+  IoCheckmarkOutline,
+  IoAddOutline,
+  IoChevronDownOutline,
+} from 'react-icons/io5';
+import { useMyList } from '../../context/MyListContext.jsx';
 import './MovieCard.css';
 
-/**
- * MovieCard reusable.
- * variant "overlay" -> background-image + judul & rating (dipakai di "Melanjutkan Tonton Film")
- * variant "plain"   -> hanya poster (dipakai di carousel lainnya)
- *
- * Kirim subtitle/duration/ageRating/genres untuk memunculkan panel preview saat di-hover,
- * kalau tidak dikirim, card berperilaku seperti biasa (tanpa hover preview).
- */
 export default function MovieCard({
   image,
   title,
@@ -19,7 +17,8 @@ export default function MovieCard({
   ageRating,
   genres = [],
 }) {
-  const hasPreview = Boolean(duration || ageRating || genres.length > 0);
+  const { isInMyList, toggleMyList } = useMyList();
+  const inList = isInMyList(title);
 
   return (
     <div className="movie-card-wrapper">
@@ -38,31 +37,34 @@ export default function MovieCard({
           )}
         </div>
 
-        {hasPreview && (
-          <div className="movie-card-preview">
-            <div className="preview-actions">
-              <button className="preview-btn preview-btn-play" aria-label="Putar">
-                <IoPlay />
-              </button>
-              <button className="preview-btn" aria-label="Tambah ke Daftar Saya">
-                <IoCheckmarkOutline />
-              </button>
-              <button className="preview-btn preview-btn-more" aria-label="Info selengkapnya">
-                <IoChevronDownOutline />
-              </button>
-            </div>
-
-            <div className="preview-info">
-              <p className="preview-title">{title}</p>
-              {subtitle && <p className="preview-subtitle">{subtitle}</p>}
-              <div className="preview-meta">
-                {ageRating && <span className="preview-age">{ageRating}</span>}
-                {duration && <span>{duration}</span>}
-              </div>
-              {genres.length > 0 && <p className="preview-genres">{genres.join(' • ')}</p>}
-            </div>
+        {/* Panel hover selalu dirender, tanpa pengecekan hasPreview */}
+        <div className="movie-card-preview">
+          <div className="preview-actions">
+            <button className="preview-btn preview-btn-play" aria-label="Putar">
+              <IoPlay />
+            </button>
+            <button
+              className="preview-btn"
+              aria-label={inList ? 'Hapus dari Daftar Saya' : 'Tambah ke Daftar Saya'}
+              onClick={() => toggleMyList({ title, image })}
+            >
+              {inList ? <IoCheckmarkOutline /> : <IoAddOutline />}
+            </button>
+            <button className="preview-btn preview-btn-more" aria-label="Info selengkapnya">
+              <IoChevronDownOutline />
+            </button>
           </div>
-        )}
+
+          <div className="preview-info">
+            <p className="preview-title">{title}</p>
+            {subtitle && <p className="preview-subtitle">{subtitle}</p>}
+            <div className="preview-meta">
+              {ageRating && <span className="preview-age">{ageRating}</span>}
+              {duration && <span>{duration}</span>}
+            </div>
+            {genres.length > 0 && <p className="preview-genres">{genres.join(' • ')}</p>}
+          </div>
+        </div>
       </div>
     </div>
   );

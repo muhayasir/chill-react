@@ -1,39 +1,52 @@
-const BASE_URL = 'https://jsonplaceholder.typicode.com';
+const BASE_URL = 'http://localhost:3001';
 
-/**
- * Modul ini membungkus semua request API untuk fitur Profil.
- * Memakai JSONPlaceholder (fake REST API) sebagai contoh karena project ini
- * belum punya backend sendiri. Kalau nanti sudah ada backend asli, cukup
- * ganti BASE_URL & endpoint di sini — kode di Profile.jsx tidak perlu berubah.
- */
-
-// GET — ambil data profil user (READ)
-export async function getProfile(userId = 1) {
-  const res = await fetch(`${BASE_URL}/users/${userId}`);
-  if (!res.ok) throw new Error('Gagal mengambil data profil');
-  const data = await res.json();
-  return {
-    id: data.id,
-    username: data.username,
-    email: data.email,
-    password: '', // API publik tidak menyimpan/mengembalikan password asli
-  };
-}
-
-// PUT — simpan perubahan profil (UPDATE)
-export async function updateProfile(userId, profile) {
-  const res = await fetch(`${BASE_URL}/users/${userId}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(profile),
-  });
-  if (!res.ok) throw new Error('Gagal menyimpan data profil');
+async function request(path, options) {
+  let res;
+  try {
+    res = await fetch(`${BASE_URL}${path}`, options);
+  } catch {
+    throw new Error('Tidak dapat terhubung ke server API. Pastikan "npm run api" sudah dijalankan.');
+  }
+  if (!res.ok) throw new Error(`Request gagal (${res.status})`);
   return res.json();
 }
 
-// DELETE — hapus akun (DELETE)
-export async function deleteProfile(userId) {
-  const res = await fetch(`${BASE_URL}/users/${userId}`, { method: 'DELETE' });
-  if (!res.ok) throw new Error('Gagal menghapus akun');
-  return true;
+const withBody = (method, body) => ({
+  method,
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(body),
+});
+
+// CREATE: daftar akun baru
+export async function registerUser({ username, email, password }) {
+  const sameUsername = await request(`/users?username=${encodeURIComponent(username)}`);
+  if (sameUsername.length > 0) throw new Error('Username sudah digunakan');
+
+  const sameEmail = await request(`/users?email=${encodeURIComponent(email)}`);
+  if (sameEmail.length > 0) throw new Error('Email sudah terdaftar');
+
+  return request('/users', withBody('POST', { username, email, password, myList: [] }));
 }
+
+// READ: login = cari user yang cocok di database
+export async function loginUser({ username, password }) {
+  const users = await request(
+    `/users?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`
+  );
+  if (users.length === 0) {
+    throw new Error('Username atau kata sandi salah, atau akun belum terdaftar');
+  }
+  return users[0];
+}
+
+// READ: ambil data satu user
+export const getUser = (id) => request(`/users/${id}`);
+
+// UPDATE: ubah data profil
+export const updateUser = (id, data) => request(`/users/${id}`, withBody('PATCH', data));
+
+// DELETE: hapus akun
+export const deleteUser = (id) => request(`/users/${id}`, { method: 'DELETE' });
+
+// UPDATE: simpan Daftar Saya milik user
+export const saveMyList = (id, myList) => request(`/users/${id}`, withBody('PATCH', { myList }));

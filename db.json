@@ -1,0 +1,24 @@
+{
+  "users": [
+    {
+      "username": "myasir15",
+      "email": "muhayasir15@gmail.com",
+      "password": "9sampai1",
+      "myList": [
+        {
+          "title": "Jurassic World",
+          "image": "/images/jurasic-world.png"
+        },
+        {
+          "title": "All Of Us Are Dead",
+          "image": "/images/all-of-us-are-dead1.png"
+        },
+        {
+          "title": "The Little Mermaid",
+          "image": "/images/the-little-mermaid.png"
+        }
+      ],
+      "id": 1
+    }
+  ]
+}

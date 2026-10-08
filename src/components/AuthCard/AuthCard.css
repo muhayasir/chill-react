@@ -80,3 +80,10 @@
   line-height: 140%;
   letter-spacing: 0.02px;
 }
+
+.auth-error {
+  color: #ff8a8a;
+  font-size: 10px;
+  margin: -8px 0 12px;
+  text-align: left;
+}

@@ -19,6 +19,13 @@
         }
       ],
       "id": 1
+    },
+    {
+      "username": "winda123",
+      "email": "winda123@gmail.com",
+      "password": "12345678",
+      "myList": [],
+      "id": 2
     }
   ]
 }

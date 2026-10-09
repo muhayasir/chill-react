@@ -1,4 +1,4 @@
-const BASE_URL = 'https://abc123.mockapi.io/api/v1';
+const BASE_URL = 'https://6ac8dde5fd7c536b1bda0344.mockapi.io/api/v1';
 
 async function request(path, options) {
   let res;

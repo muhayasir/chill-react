@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   IoPencilOutline,
@@ -9,7 +9,7 @@ import {
 } from 'react-icons/io5';
 import Navbar from '../../components/Navbar/Navbar.jsx';
 import Footer from '../../components/Footer/Footer.jsx';
-import { getUser, updateUser, deleteUser } from '../../services/api.js';
+import useProfile from '../../hooks/useProfile.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { useMyList } from '../../context/MyListContext.jsx';
 import './Profile.css';
@@ -18,46 +18,17 @@ export default function Profile() {
   const { user, logout, updateSessionUser } = useAuth();
   const { myList, removeFromMyList } = useMyList();
   const navigate = useNavigate();
-  const userId = user?.id;
 
-  const [profile, setProfile] = useState({ username: '', email: '', password: '' });
+  const { profile, setField, loading, saving, error, setError, successMessage, save, remove } =
+    useProfile(user?.id);
+
+  // State yang hanya mengurus tampilan tetap di komponen
   const [editing, setEditing] = useState({ username: false, email: false, password: false });
   const [showPassword, setShowPassword] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState(null);
 
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-
-  // READ: ambil data profil milik akun yang sedang login
-  useEffect(() => {
-    if (!userId) return undefined;
-    let ignore = false;
-
-    async function loadProfile() {
-      try {
-        setLoading(true);
-        const data = await getUser(userId);
-        if (!ignore) {
-          setProfile({ username: data.username, email: data.email, password: data.password });
-        }
-      } catch (err) {
-        if (!ignore) setError(err.message);
-      } finally {
-        if (!ignore) setLoading(false);
-      }
-    }
-
-    loadProfile();
-    return () => {
-      ignore = true;
-    };
-  }, [userId]);
-
+  const handleFieldChange = setField; // JSX lama tetap memanggil handleFieldChange
   const toggleEdit = (field) => setEditing((prev) => ({ ...prev, [field]: !prev[field] }));
-
-  const handleFieldChange = (field, value) => setProfile((prev) => ({ ...prev, [field]: value }));
 
   const handleAvatarChange = (e) => {
     const file = e.target.files?.[0];
@@ -71,42 +42,22 @@ export default function Profile() {
     reader.readAsDataURL(file);
   };
 
-  // UPDATE: simpan perubahan profil
   const handleSave = async (e) => {
     e.preventDefault();
-    if (!profile.username.trim() || !profile.email.trim() || !profile.password) {
-      setError('Nama pengguna, email, dan kata sandi tidak boleh kosong');
-      return;
-    }
-
-    try {
-      setSaving(true);
-      setError('');
-      await updateUser(userId, profile);
+    if (await save()) {
       updateSessionUser({ username: profile.username, email: profile.email });
-      setSuccessMessage('Profil berhasil disimpan');
       setEditing({ username: false, email: false, password: false });
-      setTimeout(() => setSuccessMessage(''), 2500);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setSaving(false);
     }
   };
 
-  // DELETE: hapus akun
   const handleDeleteAccount = async () => {
     const confirmed = window.confirm(
       'Yakin ingin menghapus akun ini? Tindakan ini tidak bisa dibatalkan.'
     );
     if (!confirmed) return;
-
-    try {
-      await deleteUser(userId);
+    if (await remove()) {
       logout();
       navigate('/login', { replace: true });
-    } catch (err) {
-      setError(err.message);
     }
   };
 

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
-import { loginUser } from '../../services/api.js';
+import { loginUser } from '../../services/api/userService.js';
+import useRequest from '../../hooks/useRequest.js';
 import AuthCard from '../../components/AuthCard/AuthCard.jsx';
 import InputField from '../../components/InputField/InputField.jsx';
 import Button from '../../components/Button/Button.jsx';
@@ -11,25 +12,19 @@ export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ username: '', password: '' });
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const { run: submitLogin, loading, error } = useRequest(loginUser);
 
   const handleChange = (e) => setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (loading) return;
-    setError('');
-
     try {
-      setLoading(true);
-      const user = await loginUser(form);
+      const user = await submitLogin(form);
       login(user);
       navigate('/', { replace: true });
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+    } catch {
+      // pesan error sudah disimpan oleh useRequest dan tampil lewat variabel `error`
     }
   };
 

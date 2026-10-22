@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useAuth } from './AuthContext.jsx';
-import { getUser, saveMyList } from '../services/api.js';
+import { getUserById, saveMyList } from '../services/api/userService.js';
 
 const MyListContext = createContext(null);
 
@@ -17,7 +17,7 @@ export function MyListProvider({ children }) {
       return undefined;
     }
     let ignore = false;
-    getUser(userId)
+    getUserById(userId)
       .then((data) => {
         if (!ignore) setMyList(data.myList || []);
       })

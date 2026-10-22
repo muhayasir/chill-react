@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
-import { registerUser } from '../../services/api.js';
+import { addUser } from '../../services/api/userService.js';
+import useRequest from '../../hooks/useRequest.js';
 import AuthCard from '../../components/AuthCard/AuthCard.jsx';
 import InputField from '../../components/InputField/InputField.jsx';
 import Button from '../../components/Button/Button.jsx';
@@ -11,15 +12,13 @@ export default function Register() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ username: '', email: '', password: '', confirmPassword: '' });
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const { run: submitRegister, loading, error, setError } = useRequest(addUser);
 
   const handleChange = (e) => setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (loading) return;
-    setError('');
 
     if (form.password !== form.confirmPassword) {
       setError('Konfirmasi kata sandi tidak sama');
@@ -27,18 +26,15 @@ export default function Register() {
     }
 
     try {
-      setLoading(true);
-      const newUser = await registerUser({
+      const newUser = await submitRegister({
         username: form.username,
         email: form.email,
         password: form.password,
       });
-      login(newUser); // langsung masuk dengan akun yang baru dibuat
+      login(newUser);
       navigate('/', { replace: true });
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+    } catch {
+      // pesan error sudah disimpan oleh useRequest
     }
   };
 

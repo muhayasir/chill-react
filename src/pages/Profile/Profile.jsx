@@ -11,7 +11,7 @@ import Navbar from '../../components/Navbar/Navbar.jsx';
 import Footer from '../../components/Footer/Footer.jsx';
 import useProfile from '../../hooks/useProfile.js';
 import { useAuth } from '../../context/AuthContext.jsx';
-import { useMyList } from '../../context/MyListContext.jsx';
+import useMyList from '../../hooks/useMyList.js';
 import './Profile.css';
 
 export default function Profile() {

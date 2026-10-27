@@ -7,13 +7,16 @@
     "dev": "vite",
     "api": "json-server --watch db.json --port 3001",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "seed": "node --env-file=.env scripts/seedMovies.js"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.13.0",
     "axios": "^1.20.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^5.7.0",
+    "react-redux": "^9.3.0",
     "react-router-dom": "^6.26.0"
   },
   "devDependencies": {

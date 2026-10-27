@@ -1,11 +1,39 @@
+import { useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Navbar from '../../components/Navbar/Navbar.jsx';
 import HeroSection from '../../components/HeroSection/HeroSection.jsx';
 import MovieCarousel from '../../components/MovieCarousel/MovieCarousel.jsx';
 import Footer from '../../components/Footer/Footer.jsx';
-import { continueWatching, topRating, trending, newReleases } from '../../data/movies.js';
+import { fetchMovies } from '../../store/redux/moviesSlice.js';
 import './Home.css';
 
+// Satu baris di sini = satu carousel di halaman
+const SECTIONS = [
+  { key: 'continueWatching', title: 'Melanjutkan Tonton Film', columns: 4, variant: 'overlay' },
+  { key: 'topRating', title: 'Top Rating Film dan Series Hari Ini', columns: 5, variant: 'plain' },
+  { key: 'trending', title: 'Film Trending', columns: 5, variant: 'plain' },
+  { key: 'newReleases', title: 'Rilis Baru', columns: 5, variant: 'plain' },
+];
+
 export default function Home() {
+  const dispatch = useDispatch();
+  // useSelector: ambil data film dari state Redux
+  const { items, status, error } = useSelector((state) => state.movies);
+
+  // GET data dari API saat halaman pertama kali dibuka
+  useEffect(() => {
+    if (status === 'idle') dispatch(fetchMovies());
+  }, [status, dispatch]);
+
+  // Kelompokkan film berdasarkan kategorinya
+  const grouped = useMemo(() => {
+    const result = {};
+    SECTIONS.forEach(({ key }) => {
+      result[key] = items.filter((movie) => movie.category === key);
+    });
+    return result;
+  }, [items]);
+
   return (
     <>
       <Navbar />
@@ -16,18 +44,35 @@ export default function Home() {
           ageRating="18+"
         />
 
-        <MovieCarousel
-          title="Melanjutkan Tonton Film"
-          movies={continueWatching}
-          columns={4}
-          variant="overlay"
-        />
+        {status === 'loading' && <p className="home-message">Memuat film...</p>}
 
-        <MovieCarousel title="Top Rating Film dan Series Hari Ini" movies={topRating} columns={5} />
+        {status === 'failed' && (
+          <div className="home-message">
+            <p>{error}</p>
+            <button type="button" onClick={() => dispatch(fetchMovies())}>
+              Coba lagi
+            </button>
+          </div>
+        )}
 
-        <MovieCarousel title="Film Trending" movies={trending} columns={5} />
+        {status === 'succeeded' && items.length === 0 && (
+          <p className="home-message">
+            Belum ada data film di API. Jalankan "npm run seed" satu kali untuk mengisinya.
+          </p>
+        )}
 
-        <MovieCarousel title="Rilis Baru" movies={newReleases} columns={5} />
+        {SECTIONS.map(
+          ({ key, title, columns, variant }) =>
+            grouped[key].length > 0 && (
+              <MovieCarousel
+                key={key}
+                title={title}
+                movies={grouped[key]}
+                columns={columns}
+                variant={variant}
+              />
+            )
+        )}
       </main>
 
       <Footer />

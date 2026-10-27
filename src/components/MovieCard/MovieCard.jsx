@@ -4,7 +4,7 @@ import {
   IoAddOutline,
   IoChevronDownOutline,
 } from 'react-icons/io5';
-import { useMyList } from '../../context/MyListContext.jsx';
+import useMyList from '../../hooks/useMyList.js';
 import './MovieCard.css';
 
 export default function MovieCard({
